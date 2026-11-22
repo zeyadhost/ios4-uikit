@@ -99,12 +99,55 @@ try {
     document.querySelector('.search .segments button:nth-child(2)').click();
     return Array.from(document.querySelectorAll('.search li:not([hidden])'), li => li.textContent).join(', ');
   })()`), 'Ada Lovelace, Alan Turing');
+  assert.deepEqual(await evaluate(`(() => {
+    const plain = document.querySelector('#bars .table');
+    const [airplane, wifi, bluetooth] = plain.querySelectorAll('.cell-main');
+    const accessory = bluetooth.nextElementSibling;
+    bluetooth.click();
+    const selected = getComputedStyle(bluetooth.parentElement).backgroundImage;
+    const main = getComputedStyle(bluetooth);
+    const colors = [getComputedStyle(accessory.querySelector('path')).stroke];
+    const overlay = main.backgroundImage === 'none' && main.backgroundColor === 'rgba(0, 0, 0, 0)' &&
+      getComputedStyle(accessory).backgroundImage.startsWith('linear-gradient');
+    for (const cell of [airplane, wifi]) {
+      cell.click();
+      const glyph = getComputedStyle(cell.nextElementSibling);
+      colors.push(glyph.color);
+      if (glyph.backgroundImage !== 'none' || glyph.backgroundColor !== 'rgba(0, 0, 0, 0)') return false;
+    }
+    const cleared = bluetooth.getAttribute('aria-pressed') === 'false' &&
+      getComputedStyle(bluetooth.parentElement).backgroundImage === 'none';
+    const gray = document.querySelector('.gray-selection .cell-main');
+    gray.click();
+    return [selected, overlay, colors, cleared, getComputedStyle(gray.parentElement).backgroundImage];
+  })()`), [
+    'linear-gradient(rgb(5, 142, 250), rgb(6, 97, 222))',
+    true,
+    Array(3).fill('rgb(255, 255, 255)'),
+    true,
+    'linear-gradient(rgb(171, 171, 171), rgb(119, 119, 119))'
+  ]);
   assert.equal(await evaluate(`(() => {
     document.querySelector('.edit-delete').click();
     document.querySelector('.confirm-delete').click();
     document.querySelector('.edit-insert').click();
     return document.querySelectorAll('.editable li').length;
   })()`), 2);
+  assert.deepEqual(await evaluate(`Array.from(document.querySelectorAll('.status-bar'), bar => {
+    const signal = bar.querySelector('.status-signal');
+    const battery = bar.querySelector('.status-battery');
+    return [
+      bar.offsetHeight, Array.from(signal.children, rect => rect.height.baseVal.value),
+      getComputedStyle(signal).fill, battery.offsetWidth, battery.offsetHeight,
+      getComputedStyle(battery, '::before').backgroundImage.startsWith('linear-gradient'),
+      getComputedStyle(battery, '::after').width, battery.parentElement.textContent
+    ];
+  })`), [
+    [20, [2, 4, 6, 8, 10], 'rgb(36, 36, 36)', 19, 10, true, '2px', '100%'],
+    [20, [2, 4, 6, 8, 10], 'rgb(255, 255, 255)', 19, 10, true, '2px', '100%'],
+    [20, [2, 4, 6, 8, 10], 'rgb(255, 255, 255)', 19, 10, true, '2px', '100%'],
+    [20, [2, 4, 6, 8, 10], 'rgb(255, 255, 255)', 19, 10, true, '2px', '']
+  ]);
   await capture('02-bars-lists', "document.querySelector('#bars').scrollIntoView()");
   assert.equal(await evaluate(`document.querySelector('[data-key="q"]').textContent`), 'Q');
   assert.equal(await evaluate(`(() => {
@@ -215,7 +258,7 @@ try {
   assert.equal(await evaluate('document.documentElement.scrollWidth === document.documentElement.clientWidth && innerWidth === 375'), true);
   await capture('05-mobile', `window.scrollTo(0, 0); document.querySelector('.switch').click()`);
   assert.deepEqual(failures, []);
-  console.log('PASS: 31 cards, desktop and 375px mobile; switch drag, slider, segments, pages, search, table editing, keyboard, edit menu, picker, alert and popover.');
+  console.log('PASS: 31 cards, desktop and 375px mobile; switch drag, slider, segments, pages, search, table selection and editing, status-bar icons, keyboard, edit menu, picker, alert and popover.');
 } finally {
   socket.close();
   await fetch(`${browserEndpoint}/json/close/${tab.id}`);
