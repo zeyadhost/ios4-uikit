@@ -102,6 +102,7 @@ try {
     return document.querySelectorAll('.editable li').length;
   })()`), 2);
   await capture('02-bars-lists', "document.querySelector('#bars').scrollIntoView()");
+  assert.equal(await evaluate(`document.querySelector('[data-key="q"]').textContent`), 'Q');
   assert.equal(await evaluate(`(() => {
     document.querySelector('[data-key="⇧"]').click();
     document.querySelector('[data-key="a"]').click();

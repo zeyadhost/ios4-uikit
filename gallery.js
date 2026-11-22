@@ -297,7 +297,7 @@ function drawKeyboard(focusKey) {
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.key = key;
-      button.textContent = shifted ? key.toUpperCase() : key;
+      button.textContent = key.length === 1 ? key.toUpperCase() : key;
       button.setAttribute('aria-label', keyName[key] || button.textContent);
       if (key === '⇧') button.setAttribute('aria-pressed', String(shifted));
       row.append(button);
