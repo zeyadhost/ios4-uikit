@@ -215,7 +215,7 @@ menu.addEventListener('click', event => {
   const { selectionStart: start, selectionEnd: end, value } = textView;
   if (action === 'Cut' || action === 'Copy') clipboard = value.slice(start, end);
   if (action === 'Cut') textView.setRangeText('', start, end, 'end');
-  if (action === 'Paste') textView.setRangeText(clipboard, start, end, 'end');
+  if (action === 'Paste' && clipboard) textView.setRangeText(clipboard, start, end, 'end');
   if (action === 'Select All') textView.select();
   if (action === 'Select') {
     const left = value.slice(0, start).search(/\S+$/);

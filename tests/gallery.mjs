@@ -103,6 +103,13 @@ try {
   await evaluate(`document.querySelector('[data-key="ABC"]').click(); document.querySelector('[data-menu]').click()`);
   assert.equal(await evaluate("document.querySelector('.callout').hidden"), false);
   await capture('03-text-pickers', "document.querySelector('#input').scrollIntoView()");
+  assert.deepEqual(await evaluate(`(() => {
+    const field = document.querySelector('.text-view');
+    const paste = [...document.querySelectorAll('.callout button')].find(button => button.textContent === 'Paste');
+    field.setSelectionRange(0, 6);
+    paste.click();
+    return [field.value, field.selectionStart, field.selectionEnd];
+  })()`), ['Select a word to edit it.', 0, 6]);
   await evaluate("document.querySelector('.dropdown-trigger').click(); document.querySelector('.dropdown-demo .wheel').focus()");
   await key('ArrowDown');
   assert.equal(await evaluate("document.querySelector('.dropdown-demo [aria-selected=true]').textContent"), 'London');
