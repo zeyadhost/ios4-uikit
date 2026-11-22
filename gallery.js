@@ -137,16 +137,27 @@ document.querySelectorAll('.editable').forEach(list => {
   });
 });
 
+const wheels = new Map();
 document.querySelectorAll('.wheel').forEach((wheel, wheelIndex) => {
   const options = Array.from(wheel.children);
+  let limit = options.length;
   let index = 0;
   options.forEach((option, i) => { option.id = `wheel-${wheelIndex}-${i}`; });
   function select(next, scroll = false) {
-    index = Math.max(0, Math.min(options.length - 1, next));
+    const previous = index;
+    index = Math.max(0, Math.min(limit - 1, next));
     options.forEach((option, i) => option.setAttribute('aria-selected', String(i === index)));
     wheel.setAttribute('aria-activedescendant', options[index].id);
     if (scroll) wheel.scrollTop = index * options[0].offsetHeight;
+    if (index !== previous) wheel.dispatchEvent(new Event('wheelchange'));
   }
+  function setLimit(count) {
+    if (count === limit) return;
+    limit = count;
+    options.forEach((option, i) => { option.hidden = i >= limit; });
+    select(index, true);
+  }
+  wheels.set(wheel, { get index() { return index; }, get value() { return options[index].textContent; }, setLimit });
   wheel.addEventListener('scroll', () => {
     const height = options[0].offsetHeight;
     if (height) select(Math.round(wheel.scrollTop / height));
@@ -156,12 +167,23 @@ document.querySelectorAll('.wheel').forEach((wheel, wheelIndex) => {
     if (item) select(options.indexOf(item), true);
   });
   wheel.addEventListener('keydown', event => {
-    const moves = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: options.length - 1 };
+    const moves = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: limit - 1 };
     if (!(event.key in moves)) return;
     event.preventDefault();
     select(moves[event.key], true);
   });
   select(0);
+});
+
+document.querySelectorAll('.picker[aria-label="Date"]').forEach(picker => {
+  const [month, day, year] = picker.querySelectorAll('.wheel');
+  function updateDays() {
+    const lastDay = new Date(Date.UTC(Number(wheels.get(year).value), wheels.get(month).index + 1, 0)).getUTCDate();
+    wheels.get(day).setLimit(lastDay);
+  }
+  month.addEventListener('wheelchange', updateDays);
+  year.addEventListener('wheelchange', updateDays);
+  updateDays();
 });
 
 document.querySelectorAll('.overlay').forEach((dialog, i) => {
