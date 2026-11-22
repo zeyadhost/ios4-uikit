@@ -295,8 +295,13 @@ keyboard.addEventListener('click', event => {
   } else {
     const start = keyboardField.selectionStart;
     const end = keyboardField.selectionEnd;
-    if (key === '⌫') keyboardField.setRangeText('', start === end ? Math.max(0, start - 1) : start, end, 'end');
-    else keyboardField.setRangeText(key === 'space' ? ' ' : shifted ? key.toUpperCase() : key, start, end, 'end');
+    if (key === '⌫') {
+      const previousLength = keyboardField.value.codePointAt(start - 2) > 0xffff ? 2 : 1;
+      const from = start === end ? Math.max(0, start - previousLength) : start;
+      keyboardField.setRangeText('', from, end, 'end');
+    } else {
+      keyboardField.setRangeText(key === 'space' ? ' ' : shifted ? key.toUpperCase() : key, start, end, 'end');
+    }
     if (shifted && key !== '⌫') {
       shifted = false;
       drawKeyboard(viaKeyboard ? key : undefined);

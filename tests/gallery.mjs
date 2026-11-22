@@ -109,6 +109,13 @@ try {
     document.querySelector('[data-key="2"]').click();
     return document.querySelector('.keyboard-demo input').value;
   })()`), 'A2');
+  assert.deepEqual(await evaluate(`(() => {
+    const field = document.querySelector('.keyboard-demo input');
+    field.value = 'A😀2';
+    field.setSelectionRange(3, 3);
+    document.querySelector('[data-key="⌫"]').click();
+    return [field.value, field.selectionStart];
+  })()`), ['A2', 1]);
   await evaluate(`document.querySelector('[data-key="ABC"]').click(); document.querySelector('[data-menu]').click()`);
   assert.equal(await evaluate("document.querySelector('.callout').hidden"), false);
   await capture('03-text-pickers', "document.querySelector('#input').scrollIntoView()");
