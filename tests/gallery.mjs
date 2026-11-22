@@ -162,6 +162,15 @@ try {
   await capture('04-alert', "document.querySelector('#presentation').scrollIntoView()");
   await key('Escape');
   assert.equal(await evaluate("document.querySelector('.alert').open"), false);
+  assert.deepEqual(await evaluate(`(() => {
+    const start = document.querySelector('[data-trim="start"]');
+    const play = document.querySelector('[data-play-preview]');
+    start.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+    play.click();
+    const playing = play.getAttribute('aria-pressed');
+    document.querySelector('[data-save-trim]').click();
+    return [start.getAttribute('aria-valuenow'), playing, play.getAttribute('aria-pressed'), document.querySelector('#notice').textContent];
+  })()`), ['3', 'true', 'false', 'Trim saved: 3 to 10 seconds']);
   assert.equal(await evaluate(`(() => {
     document.querySelector('[data-popover]').click();
     return document.querySelector('.popover').hidden;

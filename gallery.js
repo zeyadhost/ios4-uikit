@@ -221,6 +221,76 @@ document.querySelectorAll('[data-popover]').forEach(trigger => {
   });
 });
 
+document.querySelectorAll('.video-editor').forEach(editor => {
+  const strip = editor.querySelector('.filmstrip');
+  const play = editor.querySelector('[data-play-preview]');
+  const duration = 12;
+  const initial = { start: 2, end: 10 };
+  const trim = { ...initial };
+  function bounds(edge) {
+    return edge === 'start' ? [0, trim.end - 1] : [trim.start + 1, duration];
+  }
+  function renderTrim() {
+    Object.entries(trim).forEach(([edge, value]) => {
+      const handle = editor.querySelector(`[data-trim="${edge}"]`);
+      const [min, max] = bounds(edge);
+      strip.style.setProperty(`--trim-${edge}`, `${value / duration * 100}%`);
+      handle.setAttribute('aria-valuemin', String(min));
+      handle.setAttribute('aria-valuemax', String(max));
+      handle.setAttribute('aria-valuenow', String(value));
+      handle.setAttribute('aria-valuetext', `${value} seconds`);
+    });
+  }
+  function setEdge(edge, value) {
+    const [min, max] = bounds(edge);
+    trim[edge] = Math.min(max, Math.max(min, value));
+    renderTrim();
+  }
+  editor.querySelectorAll('[data-trim]').forEach(handle => {
+    const { trim: edge } = handle.dataset;
+    let pointer;
+    function updatePointer(event) {
+      const { left, width } = strip.getBoundingClientRect();
+      setEdge(edge, Math.round((event.clientX - left) / width * duration));
+    }
+    handle.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || pointer !== undefined) return;
+      pointer = event.pointerId;
+      handle.setPointerCapture(pointer);
+    });
+    handle.addEventListener('pointermove', event => {
+      if (event.pointerId === pointer) updatePointer(event);
+    });
+    handle.addEventListener('pointerup', event => {
+      if (event.pointerId === pointer) updatePointer(event);
+    });
+    handle.addEventListener('lostpointercapture', () => { pointer = undefined; });
+    handle.addEventListener('keydown', event => {
+      const [min, max] = bounds(edge);
+      const moves = { ArrowLeft: trim[edge] - 1, ArrowDown: trim[edge] - 1, ArrowRight: trim[edge] + 1, ArrowUp: trim[edge] + 1, Home: min, End: max };
+      if (!(event.key in moves)) return;
+      event.preventDefault();
+      setEdge(edge, moves[event.key]);
+    });
+  });
+  function setPlaying(playing) {
+    editor.classList.toggle('is-playing', playing);
+    play.setAttribute('aria-pressed', String(playing));
+    play.setAttribute('aria-label', playing ? 'Pause preview' : 'Play preview');
+  }
+  play.addEventListener('click', () => setPlaying(!editor.classList.contains('is-playing')));
+  editor.querySelector('[data-reset-trim]').addEventListener('click', () => {
+    Object.assign(trim, initial);
+    renderTrim();
+    setPlaying(false);
+  });
+  editor.querySelector('[data-save-trim]').addEventListener('click', () => {
+    setPlaying(false);
+    announce(`Trim saved: ${trim.start} to ${trim.end} seconds`);
+  });
+  renderTrim();
+});
+
 document.querySelectorAll('.spinner').forEach(spinner => {
   spinner.innerHTML = Array.from({ length: 12 }, (_, i) => `<i style="--spoke:${i}"></i>`).join('');
 });

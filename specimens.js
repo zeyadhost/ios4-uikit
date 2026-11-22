@@ -76,6 +76,16 @@ const title = text => `<h4>${text}</h4>`;
 const close = (label, className = '') => button(label, `data-close class="${className}"`);
 const keyboard = `<div class="keyboard" aria-label="On-screen keyboard"></div>`;
 const status = style => `<div class="window-demo"><div class="status-bar ${style}"><span>▂▃▄▅ Carrier</span><b>9:41 AM</b><span>100% ▰</span></div><span>UIWindow</span></div>`;
+const videoEditor = `<div class="video-editor">
+  <div class="video-scene" aria-hidden="true"></div>
+  <div class="status-bar translucent"><span>▂▃▄▅ 3G</span><b>9:41 AM</b><span>▰</span></div>
+  <div class="bar translucent">${button('Cancel', 'class="bar-button" data-reset-trim')}<strong>Trim Video</strong>${button('Save', 'class="bar-button save-trim" data-save-trim')}</div>
+  <div class="filmstrip" aria-label="Video trimmer"><div class="trim-selection" aria-hidden="true"></div>
+    ${button('', 'class="trim-handle" role="slider" aria-label="Trim start" data-trim="start"')}
+    ${button('', 'class="trim-handle" role="slider" aria-label="Trim end" data-trim="end"')}
+  </div>
+  <div class="video-controls">${button(icon('play'), 'aria-label="Play preview" aria-pressed="false" data-play-preview')}</div>
+</div>`;
 
 export const sections = [
   {
@@ -150,7 +160,7 @@ export const sections = [
       ['UIDocumentInteractionController', modal('sheet', 'Document Options', `${title('Document.pdf')}${close('Open In…')}${close('Print')}${close('Cancel', 'cancel')}`)],
       ['UIPrintInteractionController', modal('sheet', 'Print Options', `${title('Printer Options')}<label class="print-label">Copies <input type="number" min="1" max="99" value="1"></label>${close('Print')}${close('Cancel', 'cancel')}`)],
       ['UIImagePickerController', modal('sheet', 'Image Picker', `${title('Camera Roll')}<div class="photo-options">${['Mountain', 'Meadow', 'Ocean'].map(name => button(`<span>${name}</span>`, 'data-close')).join('')}</div>${close('Cancel', 'cancel')}`)],
-      ['UIVideoEditorController', modal('sheet', 'Video Editor', `${title('Trim Video')}<div class="filmstrip" aria-hidden="true"></div><label>End time <input type="range" min="1" max="12" value="12"></label>${close('Trim')}${close('Cancel', 'cancel')}`)]
+      ['UIVideoEditorController', videoEditor]
     ]
   }
 ];
