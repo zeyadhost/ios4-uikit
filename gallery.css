@@ -244,12 +244,22 @@ button { cursor: pointer; }
 .album-list button:active { background: linear-gradient(#058efa, #0661de); color: white; }
 .album-list small { color: #66778b; font-size: 12px; font-weight: normal; }
 .album-chevron { width: 8px; height: 8px; margin-left: auto; border: solid #7e8083; border-width: 2px 2px 0 0; transform: rotate(45deg); }
-.thumbnail { --ground: #476b50; --hill: #a4ad7e; --sky: #a7d4ee; display: block; aspect-ratio: 1; border: 0; background: linear-gradient(23deg, var(--ground) 30%, transparent 31%), linear-gradient(-19deg, var(--hill) 45%, transparent 46%), var(--sky); }
+.thumbnail { display: block; aspect-ratio: 1; border: 0; background: linear-gradient(var(--terrain-angle), var(--ground) 30%, transparent 31%), linear-gradient(-19deg, var(--hill) 45%, transparent 46%), radial-gradient(circle at var(--light-position), var(--light) 0 8%, transparent 9%), var(--sky); }
 .album-list .thumbnail { width: 44px; }
 .photo-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding: 3px; }
 .photo-grid .thumbnail { width: 100%; }
-.photo-grid li:nth-child(3n + 2) .thumbnail, .album-list li:nth-child(2) .thumbnail { --ground: #475d75; --hill: #879fb2; --sky: #b0cce7; }
-.photo-grid li:nth-child(3n + 3) .thumbnail { --ground: #855447; --hill: #be875e; --sky: #f1d19a; }
+.thumbnail[data-scene=Dunes] { --ground: #a06f4e; --hill: #d8ac70; --sky: #e2c7a1; --terrain-angle: 41deg; --light: #fff4c4; --light-position: 25% 25%; }
+.thumbnail[data-scene=Mountain] { --ground: #394e62; --hill: #8eacb8; --sky: #b8d1ee; --terrain-angle: 61deg; --light: #f2f5ff; --light-position: 75% 19%; }
+.thumbnail[data-scene=Lakeside] { --ground: #416e94; --hill: #779880; --sky: #bdd7e3; --terrain-angle: 1deg; --light: #faf4c9; --light-position: 37% 21%; }
+.thumbnail[data-scene=Meadow] { --ground: #537745; --hill: #a2b76c; --sky: #d4e2ab; --terrain-angle: -24deg; --light: #fff4a8; --light-position: 67% 15%; }
+.thumbnail[data-scene=Sunset] { --ground: #563b57; --hill: #b56165; --sky: #e6a484; --terrain-angle: 9deg; --light: #ffd698; --light-position: 56% 42%; }
+.thumbnail[data-scene=Forest] { --ground: #264f4f; --hill: #56866b; --sky: #afc5a0; --terrain-angle: 24deg; --light: #e5eed0; --light-position: 14% 13%; }
+.thumbnail[data-scene=Harbor] { --ground: #375875; --hill: #9babb5; --sky: #c3d0dc; --terrain-angle: 0deg; --light: #e9eeef; --light-position: 76% 35%; }
+.thumbnail[data-scene=Trail] { --ground: #886b48; --hill: #5e7759; --sky: #a9c4a7; --terrain-angle: -37deg; --light: #ebeabc; --light-position: 58% 22%; }
+.thumbnail[data-scene=Hills] { --ground: #627751; --hill: #91a67c; --sky: #c3d8df; --terrain-angle: 34deg; --light: #fff3bc; --light-position: 28% 31%; }
+.thumbnail[data-scene=Ocean] { --ground: #366b92; --hill: #72aab8; --sky: #b3dded; --terrain-angle: -4deg; --light: #f6f4db; --light-position: 75% 13%; }
+.thumbnail[data-scene=Field] { --ground: #88764a; --hill: #c8a863; --sky: #d0ddec; --terrain-angle: -19deg; --light: #fff1b2; --light-position: 68% 30%; }
+.thumbnail[data-scene=Garden] { --ground: #466252; --hill: #bb8b9c; --sky: #dbe7ce; --terrain-angle: 17deg; --light: #f9ebd1; --light-position: 18% 28%; }
 .photo-grid .thumbnail:active { filter: brightness(.7); }
 .video-editor { width: 480px; max-width: 100%; min-height: 184px; aspect-ratio: 3 / 2; position: relative; overflow: hidden; color: white; border: 1px solid #151515; background: #2a3c30; }
 .video-scene { position: absolute; inset: 0; background: linear-gradient(18deg, #1c4033 0 24%, transparent 24%), linear-gradient(-15deg, #788c54 0 36%, transparent 36%), linear-gradient(26deg, #517147 0 51%, transparent 51%), linear-gradient(160deg, #d9e6cf, #8eafa0 57%); }

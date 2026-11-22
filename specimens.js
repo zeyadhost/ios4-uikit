@@ -86,8 +86,8 @@ const photoPicker = `<div class="photo-picker">
     <strong>Photo Albums</strong>
     ${button('Cancel', 'class="bar-button" data-photo-cancel')}
   </div>
-  <ul class="album-list">${photoAlbums.map(([album, photos], i) => `<li>${button(`<span class="thumbnail" aria-hidden="true"></span><span>${album} <small>(${photos.length})</small></span><span class="album-chevron" aria-hidden="true"></span>`, `data-album="${i}"`)}</li>`).join('')}</ul>
-  ${photoAlbums.map(([album, photos], i) => `<ul class="photo-grid" data-photos="${i}" aria-label="${album}" hidden>${photos.map(photo => `<li>${button('', `class="thumbnail" aria-label="${photo}" data-photo="${photo}"`)}</li>`).join('')}</ul>`).join('')}
+  <ul class="album-list">${photoAlbums.map(([album, photos], i) => `<li>${button(`<span class="thumbnail" data-scene="${photos[0]}" aria-hidden="true"></span><span>${album} <small>(${photos.length})</small></span><span class="album-chevron" aria-hidden="true"></span>`, `data-album="${i}"`)}</li>`).join('')}</ul>
+  ${photoAlbums.map(([album, photos], i) => `<ul class="photo-grid" data-photos="${i}" aria-label="${album}" hidden>${photos.map(photo => `<li>${button('', `class="thumbnail" aria-label="${photo}" data-photo="${photo}" data-scene="${photo}"`)}</li>`).join('')}</ul>`).join('')}
 </div>`;
 const videoEditor = `<div class="video-editor">
   <div class="video-scene" aria-hidden="true"></div>
