@@ -76,6 +76,19 @@ const title = text => `<h4>${text}</h4>`;
 const close = (label, className = '') => button(label, `data-close class="${className}"`);
 const keyboard = `<div class="keyboard" aria-label="On-screen keyboard"></div>`;
 const status = style => `<div class="window-demo"><div class="status-bar ${style}"><span>▂▃▄▅ Carrier</span><b>9:41 AM</b><span>100% ▰</span></div><span>UIWindow</span></div>`;
+const photoAlbums = [
+  ['Camera Roll', ['Dunes', 'Mountain', 'Lakeside', 'Meadow', 'Sunset', 'Forest', 'Harbor', 'Trail']],
+  ['Photo Library', ['Hills', 'Ocean', 'Field', 'Garden']]
+];
+const photoPicker = `<div class="photo-picker">
+  <div class="bar">
+    ${button('Albums', 'class="bar-button back" data-photo-back hidden')}
+    <strong>Photo Albums</strong>
+    ${button('Cancel', 'class="bar-button" data-photo-cancel')}
+  </div>
+  <ul class="album-list">${photoAlbums.map(([album, photos], i) => `<li>${button(`<span class="thumbnail" aria-hidden="true"></span><span>${album} <small>(${photos.length})</small></span><span class="album-chevron" aria-hidden="true"></span>`, `data-album="${i}"`)}</li>`).join('')}</ul>
+  ${photoAlbums.map(([album, photos], i) => `<ul class="photo-grid" data-photos="${i}" aria-label="${album}" hidden>${photos.map(photo => `<li>${button('', `class="thumbnail" aria-label="${photo}" data-photo="${photo}"`)}</li>`).join('')}</ul>`).join('')}
+</div>`;
 const videoEditor = `<div class="video-editor">
   <div class="video-scene" aria-hidden="true"></div>
   <div class="status-bar translucent"><span>▂▃▄▅ 3G</span><b>9:41 AM</b><span>▰</span></div>
@@ -159,7 +172,7 @@ export const sections = [
       ['UISplitViewController', `<div class="split"><div class="bar"><strong>Notes</strong></div><div class="split-body"><div class="split-list" role="group" aria-label="Notes">${['Today', 'Yesterday', 'Monday'].map((name, i) => button(name, `data-note="${i}" aria-pressed="${i === 0}"`)).join('')}</div><div class="split-detail" aria-live="polite">Write a note.</div></div></div>`],
       ['UIDocumentInteractionController', modal('sheet', 'Document Options', `${title('Document.pdf')}${close('Open In…')}${close('Print')}${close('Cancel', 'cancel')}`)],
       ['UIPrintInteractionController', modal('sheet', 'Print Options', `${title('Printer Options')}<label class="print-label">Copies <input type="number" min="1" max="99" value="1"></label>${close('Print')}${close('Cancel', 'cancel')}`)],
-      ['UIImagePickerController', modal('sheet', 'Image Picker', `${title('Camera Roll')}<div class="photo-options">${['Mountain', 'Meadow', 'Ocean'].map(name => button(`<span>${name}</span>`, 'data-close')).join('')}</div>${close('Cancel', 'cancel')}`)],
+      ['UIImagePickerController', photoPicker],
       ['UIVideoEditorController', videoEditor]
     ]
   }

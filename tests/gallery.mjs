@@ -171,6 +171,14 @@ try {
     document.querySelector('[data-save-trim]').click();
     return [start.getAttribute('aria-valuenow'), playing, play.getAttribute('aria-pressed'), document.querySelector('#notice').textContent];
   })()`), ['3', 'true', 'false', 'Trim saved: 3 to 10 seconds']);
+  assert.deepEqual(await evaluate(`(() => {
+    const picker = document.querySelector('.photo-picker');
+    picker.querySelector('[data-album="0"]').click();
+    const grid = picker.querySelector('.photo-grid:not([hidden])');
+    const opened = [picker.querySelector('strong').textContent, grid.querySelectorAll('button').length];
+    grid.querySelector('[data-photo="Mountain"]').click();
+    return [...opened, picker.querySelector('strong').textContent, document.querySelector('#notice').textContent];
+  })()`), ['Camera Roll', 8, 'Photo Albums', 'Mountain selected']);
   assert.equal(await evaluate(`(() => {
     document.querySelector('[data-popover]').click();
     return document.querySelector('.popover').hidden;

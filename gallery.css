@@ -234,11 +234,23 @@ button { cursor: pointer; }
 .split-detail { padding: 9px; border-inline-start: 1px solid #aa9c74; background: repeating-linear-gradient(#f6f0d7 0 23px, #e3d4ae 24px); }
 .print-label { display: flex; align-items: center; justify-content: space-between; padding: 8px; background: white; color: #111; }
 .print-label input { width: 5em; }
-.photo-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-.photo-options button { display: grid; place-items: end center; min-height: 85px; background: linear-gradient(#a7d4ee 50%, #517588 51%); }
-.photo-options button:nth-child(2) { background: linear-gradient(#c0e4fa 50%, #729c5b 51%); }
-.photo-options button:nth-child(3) { background: linear-gradient(#ffd49f 50%, #97bdcb 51%); }
-.photo-options span { background: #fff; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+.photo-picker { width: 320px; max-width: 100%; min-height: 216px; background: white; border: 1px solid #8793a3; }
+.photo-picker .bar { display: grid; grid-template-columns: 56px minmax(0, 1fr) 56px; padding-inline: 4px; text-align: center; }
+.photo-picker .bar strong { grid-column: 2; font-size: clamp(14px, 2vw, 18px); }
+.photo-picker .bar-button.back { grid-column: 1; }
+.photo-picker [data-photo-cancel] { grid-column: 3; }
+.album-list, .photo-grid { margin: 0; padding: 0; list-style: none; }
+.album-list button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 3px 8px 3px 3px; border: 0; border-bottom: 1px solid #c7c7c9; background: white; color: black; text-align: start; font-weight: bold; }
+.album-list button:active { background: linear-gradient(#058efa, #0661de); color: white; }
+.album-list small { color: #66778b; font-size: 12px; font-weight: normal; }
+.album-chevron { width: 8px; height: 8px; margin-left: auto; border: solid #7e8083; border-width: 2px 2px 0 0; transform: rotate(45deg); }
+.thumbnail { --ground: #476b50; --hill: #a4ad7e; --sky: #a7d4ee; display: block; aspect-ratio: 1; border: 0; background: linear-gradient(23deg, var(--ground) 30%, transparent 31%), linear-gradient(-19deg, var(--hill) 45%, transparent 46%), var(--sky); }
+.album-list .thumbnail { width: 44px; }
+.photo-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding: 3px; }
+.photo-grid .thumbnail { width: 100%; }
+.photo-grid li:nth-child(3n + 2) .thumbnail, .album-list li:nth-child(2) .thumbnail { --ground: #475d75; --hill: #879fb2; --sky: #b0cce7; }
+.photo-grid li:nth-child(3n + 3) .thumbnail { --ground: #855447; --hill: #be875e; --sky: #f1d19a; }
+.photo-grid .thumbnail:active { filter: brightness(.7); }
 .video-editor { width: 480px; max-width: 100%; min-height: 184px; aspect-ratio: 3 / 2; position: relative; overflow: hidden; color: white; border: 1px solid #151515; background: #2a3c30; }
 .video-scene { position: absolute; inset: 0; background: linear-gradient(18deg, #1c4033 0 24%, transparent 24%), linear-gradient(-15deg, #788c54 0 36%, transparent 36%), linear-gradient(26deg, #517147 0 51%, transparent 51%), linear-gradient(160deg, #d9e6cf, #8eafa0 57%); }
 .video-scene::before { content: ""; position: absolute; inset: 0; background: linear-gradient(155deg, transparent 0 61%, #a99771 62% 68%, #726947 69% 72%, transparent 73%); }

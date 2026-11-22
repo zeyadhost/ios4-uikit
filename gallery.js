@@ -221,6 +221,41 @@ document.querySelectorAll('[data-popover]').forEach(trigger => {
   });
 });
 
+document.querySelectorAll('.photo-picker').forEach(picker => {
+  const heading = picker.querySelector('strong');
+  const back = picker.querySelector('[data-photo-back]');
+  const albums = picker.querySelector('.album-list');
+  const grids = picker.querySelectorAll('.photo-grid');
+  let openedAlbum;
+  function showAlbums() {
+    heading.textContent = 'Photo Albums';
+    back.hidden = true;
+    albums.hidden = false;
+    grids.forEach(grid => { grid.hidden = true; });
+    if (openedAlbum) openedAlbum.focus();
+    openedAlbum = undefined;
+  }
+  albums.addEventListener('click', event => {
+    const album = event.target.closest('[data-album]');
+    if (!album) return;
+    openedAlbum = album;
+    const grid = grids[Number(album.dataset.album)];
+    heading.textContent = grid.getAttribute('aria-label');
+    back.hidden = false;
+    albums.hidden = true;
+    grid.hidden = false;
+    grid.querySelector('button').focus();
+  });
+  back.addEventListener('click', showAlbums);
+  picker.querySelector('[data-photo-cancel]').addEventListener('click', showAlbums);
+  grids.forEach(grid => grid.addEventListener('click', event => {
+    const photo = event.target.closest('[data-photo]');
+    if (!photo) return;
+    announce(`${photo.dataset.photo} selected`);
+    showAlbums();
+  }));
+});
+
 document.querySelectorAll('.video-editor').forEach(editor => {
   const strip = editor.querySelector('.filmstrip');
   const play = editor.querySelector('[data-play-preview]');
