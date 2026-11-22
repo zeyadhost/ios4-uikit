@@ -75,7 +75,14 @@ const modal = (kind, label, content) => `<div class="modal-example">${button(lab
 const title = text => `<h4>${text}</h4>`;
 const close = (label, className = '') => button(label, `data-close class="${className}"`);
 const keyboard = `<div class="keyboard" aria-label="On-screen keyboard"></div>`;
-const status = style => `<div class="window-demo"><div class="status-bar ${style}"><span>▂▃▄▅ Carrier</span><b>9:41 AM</b><span>100% ▰</span></div><span>UIWindow</span></div>`;
+const statusBar = (style, network = 'Carrier', percentage = '100%') => `<div class="status-bar ${style}">
+  <span class="status-side"><svg class="status-signal" viewBox="0 0 19 10" role="img" aria-label="Full cellular signal">
+    <rect y="8" width="3" height="2"/><rect x="4" y="6" width="3" height="4"/><rect x="8" y="4" width="3" height="6"/><rect x="12" y="2" width="3" height="8"/><rect x="16" width="3" height="10"/>
+  </svg>${network}</span>
+  <b>9:41 AM</b>
+  <span class="status-side">${percentage}<span class="status-battery" ${percentage ? 'aria-hidden="true"' : 'role="img" aria-label="Battery full"'}></span></span>
+</div>`;
+const status = style => `<div class="window-demo">${statusBar(style)}<span>UIWindow</span></div>`;
 const photoAlbums = [
   ['Camera Roll', ['Dunes', 'Mountain', 'Lakeside', 'Meadow', 'Sunset', 'Forest', 'Harbor', 'Trail']],
   ['Photo Library', ['Hills', 'Ocean', 'Field', 'Garden']]
@@ -91,7 +98,7 @@ const photoPicker = `<div class="photo-picker">
 </div>`;
 const videoEditor = `<div class="video-editor">
   <div class="video-scene" aria-hidden="true"></div>
-  <div class="status-bar translucent"><span>▂▃▄▅ 3G</span><b>9:41 AM</b><span>▰</span></div>
+  ${statusBar('translucent', '3G', '')}
   <div class="bar translucent">${button('Cancel', 'class="bar-button" data-reset-trim')}<strong>Trim Video</strong>${button('Save', 'class="bar-button save-trim" data-save-trim')}</div>
   <div class="filmstrip" aria-label="Video trimmer"><div class="trim-selection" aria-hidden="true"></div>
     ${button('', 'class="trim-handle" role="slider" aria-label="Trim start" data-trim="start"')}
