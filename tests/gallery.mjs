@@ -162,6 +162,14 @@ try {
     document.querySelector('[data-popover]').click();
     return document.querySelector('.popover').hidden;
   })()`), true);
+  await viewport(720, 820);
+  assert.equal(await evaluate(`['.keyboard-demo', '.picker', '.text-demo'].every(selector =>
+    Array.from(document.querySelectorAll('#input ' + selector)).every(element => {
+      if (!element.getClientRects().length) return true;
+      const { left, right } = element.getBoundingClientRect();
+      const card = element.closest('.card').getBoundingClientRect();
+      return left >= card.left && right <= card.right;
+    }))`), true);
   await viewport(375, 820);
   assert.equal(await evaluate('document.documentElement.scrollWidth === document.documentElement.clientWidth && innerWidth === 375'), true);
   await capture('05-mobile', `window.scrollTo(0, 0); document.querySelector('.switch').click()`);
