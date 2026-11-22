@@ -62,6 +62,10 @@ try {
   }
   assert.equal(await evaluate("document.querySelectorAll('.collection').length"), 4);
   assert.equal(await evaluate("document.querySelectorAll('.card').length"), 31);
+  assert.deepEqual(await evaluate(`(() => {
+    const picker = document.querySelector('.picker');
+    return [picker.offsetWidth, picker.offsetHeight, getComputedStyle(picker.querySelector('[role=option]')).fontSize];
+  })()`), [320, 216, '22px']);
   assert.equal(await evaluate("document.querySelector('.switch').getAttribute('aria-checked')"), 'false');
   await capture('01-overview');
   const [x, y] = await evaluate("(() => { const r = document.querySelector('.switch').getBoundingClientRect(); return [r.left + 15, r.top + 12]; })()");

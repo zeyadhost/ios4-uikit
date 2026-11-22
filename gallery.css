@@ -177,14 +177,14 @@ button { cursor: pointer; }
 .key-row:last-child button { flex-grow: 1; font-size: 13px; }
 .key-row button[data-key="space"] { flex-basis: 46%; }
 .key-row button:active, .key-row button[aria-pressed=true] { background: linear-gradient(#5d9bef, #285eb0); color: white; }
-.picker { --wheel-row: 28px; display: flex; width: 320px; max-width: 100%; height: 130px; padding: 0 7px; position: relative; overflow: hidden; border: 1px solid #111; border-radius: 5px; background: linear-gradient(#575a5c, #141615 27%, #626363 50%, #0b0b0b 74%, #424243); }
+.picker { --wheel-row: 39px; --wheel-viewport: 214px; display: flex; width: 320px; max-width: 100%; height: 216px; padding: 0 7px; position: relative; overflow: hidden; container-type: inline-size; border: 1px solid #111; border-radius: 5px; background: linear-gradient(#575a5c, #141615 27%, #626363 50%, #0b0b0b 74%, #424243); }
 .picker::before, .picker::after { content: ""; position: absolute; z-index: 1; pointer-events: none; }
 .picker::before { inset: 0 7px; background: linear-gradient(#0009, transparent 41%, transparent 59%, #0008); }
 .picker::after { height: var(--wheel-row); top: calc(50% - var(--wheel-row) / 2); left: 3px; right: 3px; border: 1px solid #425370; border-radius: 5px; background: linear-gradient(#98aed3a8, #b3c4df5e 48%, #829bc231 51%, #718db778); box-shadow: 0 1px #ffffff84, inset 0 1px #ffffff8a; }
-.wheel { flex: 1 1 auto; min-width: 0; overflow: auto; scroll-snap-type: y mandatory; scrollbar-width: none; text-align: center; padding-block: calc((128px - var(--wheel-row)) / 2); border-inline: 1px solid #777; color: black; background: linear-gradient(#a5a5a5, #eee 32%, white 47%, #fff 53%, #ddd 76%, #aaa); }
+.wheel { flex: 1 1 auto; min-width: 0; overflow: auto; scroll-snap-type: y mandatory; scrollbar-width: none; text-align: center; padding-block: calc((var(--wheel-viewport) - var(--wheel-row)) / 2); border-inline: 1px solid #777; color: black; background: linear-gradient(#a5a5a5, #eee 32%, white 47%, #fff 53%, #ddd 76%, #aaa); }
 .wheel::-webkit-scrollbar { display: none; }
 .wheel:focus-visible { outline-offset: -4px; }
-.wheel [role=option] { display: grid; align-items: center; height: var(--wheel-row); white-space: nowrap; padding-inline: 3px; scroll-snap-align: center; overflow: hidden; font-size: 14px; font-weight: bold; cursor: pointer; }
+.wheel [role=option] { display: grid; align-items: center; height: var(--wheel-row); white-space: nowrap; padding-inline: 3px; scroll-snap-align: center; overflow: hidden; font-size: clamp(16px, 7.2cqi, 22px); font-weight: bold; cursor: pointer; }
 
 .overlay { position: fixed; color: white; border: 0; padding: 0; max-width: calc(100% - 24px); overflow: visible; background: transparent; }
 .overlay::backdrop { background: #0008; }
