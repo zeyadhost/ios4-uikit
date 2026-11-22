@@ -259,6 +259,7 @@ document.querySelectorAll('.photo-picker').forEach(picker => {
 document.querySelectorAll('.video-editor').forEach(editor => {
   const strip = editor.querySelector('.filmstrip');
   const play = editor.querySelector('[data-play-preview]');
+  const scene = editor.querySelector('.video-scene');
   const duration = 12;
   const initial = { start: 2, end: 10 };
   const trim = { ...initial };
@@ -318,6 +319,8 @@ document.querySelectorAll('.video-editor').forEach(editor => {
     Object.assign(trim, initial);
     renderTrim();
     setPlaying(false);
+    const preview = scene.getAnimations().find(animation => animation.animationName === 'preview-pan');
+    if (preview) preview.currentTime = 0;
   });
   editor.querySelector('[data-save-trim]').addEventListener('click', () => {
     setPlaying(false);

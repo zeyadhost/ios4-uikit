@@ -171,6 +171,25 @@ try {
     document.querySelector('[data-save-trim]').click();
     return [start.getAttribute('aria-valuenow'), playing, play.getAttribute('aria-pressed'), document.querySelector('#notice').textContent];
   })()`), ['3', 'true', 'false', 'Trim saved: 3 to 10 seconds']);
+  assert.deepEqual(await evaluate(`(async () => {
+    const play = document.querySelector('[data-play-preview]');
+    const scene = document.querySelector('.video-scene');
+    play.click();
+    const [animation] = scene.getAnimations();
+    await animation.ready;
+    animation.currentTime = 1500;
+    play.click();
+    await animation.ready;
+    const pausedAt = animation.currentTime;
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const paused = scene.getAnimations()[0] === animation && animation.playState === 'paused' && animation.currentTime === pausedAt && pausedAt >= 1500;
+    play.click();
+    await animation.ready;
+    const resumed = scene.getAnimations()[0] === animation && animation.playState === 'running' && animation.currentTime >= pausedAt;
+    document.querySelector('[data-reset-trim]').click();
+    await animation.ready;
+    return [paused, resumed, animation.currentTime === 0];
+  })()`), [true, true, true]);
   assert.deepEqual(await evaluate(`(() => {
     const picker = document.querySelector('.photo-picker');
     picker.querySelector('[data-album="0"]').click();

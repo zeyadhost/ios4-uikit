@@ -262,9 +262,9 @@ button { cursor: pointer; }
 .thumbnail[data-scene=Garden] { --ground: #466252; --hill: #bb8b9c; --sky: #dbe7ce; --terrain-angle: 17deg; --light: #f9ebd1; --light-position: 18% 28%; }
 .photo-grid .thumbnail:active { filter: brightness(.7); }
 .video-editor { width: 480px; max-width: 100%; min-height: 184px; aspect-ratio: 3 / 2; position: relative; overflow: hidden; color: white; border: 1px solid #151515; background: #2a3c30; }
-.video-scene { position: absolute; inset: 0; background: linear-gradient(18deg, #1c4033 0 24%, transparent 24%), linear-gradient(-15deg, #788c54 0 36%, transparent 36%), linear-gradient(26deg, #517147 0 51%, transparent 51%), linear-gradient(160deg, #d9e6cf, #8eafa0 57%); }
+.video-scene { position: absolute; inset: 0; background: linear-gradient(18deg, #1c4033 0 24%, transparent 24%), linear-gradient(-15deg, #788c54 0 36%, transparent 36%), linear-gradient(26deg, #517147 0 51%, transparent 51%), linear-gradient(160deg, #d9e6cf, #8eafa0 57%); animation: preview-pan 5s ease-in-out infinite alternate paused; }
 .video-scene::before { content: ""; position: absolute; inset: 0; background: linear-gradient(155deg, transparent 0 61%, #a99771 62% 68%, #726947 69% 72%, transparent 73%); }
-.video-editor.is-playing .video-scene { animation: preview-pan 5s ease-in-out infinite alternate; }
+.video-editor.is-playing .video-scene { animation-play-state: running; }
 @keyframes preview-pan { to { transform: scale(1.2) translateX(3%); } }
 .video-editor .status-bar, .video-editor .bar { position: relative; }
 .video-editor .bar { min-height: 34px; }
