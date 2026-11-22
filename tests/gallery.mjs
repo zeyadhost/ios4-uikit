@@ -65,9 +65,18 @@ try {
   assert.equal(await evaluate("document.querySelector('.switch').getAttribute('aria-checked')"), 'false');
   await capture('01-overview');
   const [x, y] = await evaluate("(() => { const r = document.querySelector('.switch').getBoundingClientRect(); return [r.left + 15, r.top + 12]; })()");
-  await send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', buttons: 1, x, y, clickCount: 1 });
-  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', button: 'left', buttons: 1, x: x + 65, y });
-  await send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', x: x + 65, y, clickCount: 1 });
+  async function dragSwitch(path) {
+    await send('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'left', buttons: 1, x, y, clickCount: 1 });
+    for (const distance of path) {
+      await send('Input.dispatchMouseEvent', { type: 'mouseMoved', button: 'left', buttons: 1, x: x + distance, y });
+    }
+    await send('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'left', x: x + path.at(-1), y, clickCount: 1 });
+  }
+  await dragSwitch([65, 10]);
+  assert.equal(await evaluate("document.querySelector('.switch').getAttribute('aria-checked')"), 'false');
+  await dragSwitch([65]);
+  assert.equal(await evaluate("document.querySelector('.switch').getAttribute('aria-checked')"), 'true');
+  await dragSwitch([-65, 0]);
   assert.equal(await evaluate("document.querySelector('.switch').getAttribute('aria-checked')"), 'true');
   assert.equal(await evaluate(`(() => {
     const slider = document.querySelector('.slider');

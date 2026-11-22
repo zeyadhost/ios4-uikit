@@ -28,6 +28,10 @@ document.querySelectorAll('.switch').forEach(control => {
   const knob = control.querySelector('.knob');
   const isOn = () => control.getAttribute('aria-checked') === 'true';
   const setOn = on => control.setAttribute('aria-checked', String(on));
+  function dragPosition(clientX) {
+    const scale = control.getBoundingClientRect().width / 94;
+    return Math.max(0, Math.min(54, (startedOn ? 54 : 0) + (clientX - startX) / scale));
+  }
 
   control.addEventListener('pointerdown', event => {
     if (event.button !== 0 || pointer !== undefined) return;
@@ -42,18 +46,19 @@ document.querySelectorAll('.switch').forEach(control => {
     if (event.pointerId !== pointer) return;
     const delta = event.clientX - startX;
     if (Math.abs(delta) > 5) moved = true;
-    if (moved) {
-      const scale = control.getBoundingClientRect().width / 94;
-      const position = Math.max(0, Math.min(54, (startedOn ? 54 : 0) + delta / scale));
-      knob.style.transform = `translateX(${position}px)`;
-    }
+    if (moved) knob.style.transform = `translateX(${dragPosition(event.clientX)}px)`;
   });
   function finish(event, cancelled) {
     if (event.pointerId !== pointer) return;
     pointer = undefined;
     control.classList.remove('dragging');
     knob.style.transform = '';
-    setOn(cancelled ? startedOn : moved ? event.clientX > startX : !startedOn);
+    if (cancelled) setOn(startedOn);
+    else if (!moved) setOn(!startedOn);
+    else {
+      const position = dragPosition(event.clientX);
+      setOn(position === 27 ? startedOn : position > 27);
+    }
   }
   control.addEventListener('pointerup', event => finish(event, false));
   control.addEventListener('pointercancel', event => finish(event, true));
