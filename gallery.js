@@ -142,6 +142,7 @@ document.querySelectorAll('.wheel').forEach((wheel, wheelIndex) => {
   const options = Array.from(wheel.children);
   let limit = options.length;
   let index = 0;
+  let preferredIndex = 0;
   options.forEach((option, i) => { option.id = `wheel-${wheelIndex}-${i}`; });
   function select(next, scroll = false) {
     const previous = index;
@@ -155,22 +156,29 @@ document.querySelectorAll('.wheel').forEach((wheel, wheelIndex) => {
     if (count === limit) return;
     limit = count;
     options.forEach((option, i) => { option.hidden = i >= limit; });
-    select(index, true);
+    select(preferredIndex, true);
+  }
+  function choose(next, scroll = false) {
+    if (next < 0 || next >= limit) return;
+    preferredIndex = next;
+    select(next, scroll);
   }
   wheels.set(wheel, { get index() { return index; }, get value() { return options[index].textContent; }, setLimit });
   wheel.addEventListener('scroll', () => {
     const height = options[0].offsetHeight;
-    if (height) select(Math.round(wheel.scrollTop / height));
+    if (!height) return;
+    const next = Math.round(wheel.scrollTop / height);
+    if (next !== index) choose(next);
   }, { passive: true });
   wheel.addEventListener('click', event => {
     const item = event.target.closest('[role=option]');
-    if (item) select(options.indexOf(item), true);
+    if (item) choose(options.indexOf(item), true);
   });
   wheel.addEventListener('keydown', event => {
     const moves = { ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: limit - 1 };
     if (!(event.key in moves)) return;
     event.preventDefault();
-    select(moves[event.key], true);
+    choose(moves[event.key], true);
   });
   select(0);
 });

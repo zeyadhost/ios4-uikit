@@ -131,17 +131,26 @@ try {
   assert.equal(await evaluate("document.querySelector('.dropdown-demo [aria-selected=true]').textContent"), 'London');
   await evaluate("document.querySelector('.dropdown-demo [data-close]').click()");
   assert.equal(await evaluate("document.querySelector('.dropdown-trigger').textContent"), 'London');
-  assert.deepEqual(await evaluate(`(() => {
+  assert.deepEqual(await evaluate(`(async () => {
     const [month, day, year] = document.querySelectorAll('.picker[aria-label="Date"] .wheel');
     const state = () => [day.querySelector('[aria-selected=true]').textContent, day.querySelectorAll('[role=option]:not([hidden])').length];
+    const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     day.children[30].click();
     month.children[1].click();
+    await settle();
     const leap = state();
     year.children[1].click();
+    await settle();
     const common = state();
-    month.children[0].click();
-    return [leap, common, state()];
-  })()`), [['29', 29], ['28', 28], ['28', 31]]);
+    month.children[2].click();
+    await settle();
+    const restored = state();
+    month.children[1].click();
+    day.children[14].click();
+    await settle();
+    month.children[2].click();
+    return [leap, common, restored, state()];
+  })()`), [['29', 29], ['28', 28], ['31', 31], ['15', 31]]);
   await evaluate("document.querySelector('.alert').previousElementSibling.click()");
   assert.equal(await evaluate("document.querySelector('.alert').open"), true);
   await evaluate("Promise.all(document.querySelector('.alert').getAnimations().map(animation => animation.finished))");
